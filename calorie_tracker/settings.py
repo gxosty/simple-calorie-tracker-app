@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "mathfilters",
+    "main",
 ]
 
 MIDDLEWARE = [
@@ -105,13 +107,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = "/login"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "tk-tm"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Ashgabat"
 
 USE_I18N = True
 

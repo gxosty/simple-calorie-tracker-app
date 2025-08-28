@@ -1,0 +1,12 @@
+<div id="meal-list" class="space-y-4" hx-get="{% url 'get_meal_list' %}" hx-swap="outerHTML" hx-trigger="meal-list-updated from:body">
+    {% if today_entries %}
+        {% for entry in today_entries %}
+            {% include 'partials/food_entry_row.html' with entry=entry %}
+        {% endfor %}
+    {% else %}
+        <div class="text-center text-gray-500">
+            <p>Nothing logged yet. What did you eat today? 😋</p>
+        </div>
+    {% endif %}
+</div>
+

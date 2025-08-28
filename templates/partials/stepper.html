@@ -1,0 +1,18 @@
+{% with step=current_step %}
+<div class="flex justify-center items-center space-x-4 mb-8">
+    <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white {% if step >= 1 %}bg-blue-500{% else %}bg-gray-300{% endif %}">1</div>
+        <span class="mt-2 text-xs {% if step >= 1 %}text-blue-500{% else %}text-gray-500{% endif %}">Goal</span>
+    </div>
+    <div class="h-1 w-8 {% if step >= 2 %}bg-blue-500{% else %}bg-gray-300{% endif %}"></div>
+    <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white {% if step >= 2 %}bg-blue-500{% else %}bg-gray-300{% endif %}">2</div>
+        <span class="mt-2 text-xs {% if step >= 2 %}text-blue-500{% else %}text-gray-500{% endif %}">Weight</span>
+    </div>
+    <div class="h-1 w-8 {% if step >= 3 %}bg-blue-500{% else %}bg-gray-300{% endif %}"></div>
+    <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white {% if step >= 3 %}bg-blue-500{% else %}bg-gray-300{% endif %}">3</div>
+        <span class="mt-2 text-xs {% if step >= 3 %}text-blue-500{% else %}text-gray-500{% endif %}">Account</span>
+    </div>
+</div>
+{% endwith %}

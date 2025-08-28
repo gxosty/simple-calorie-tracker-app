@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome Back! 👋</h1>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-left text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" placeholder="Enter your username" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+            </div>
+            
+            <div>
+                <label for="{{ form.password.id_for_label }}" class="block text-left text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" placeholder="Enter your password" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="text-red-500 text-sm mt-4 text-center">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">
+                Log In
+            </button>
+        </form>
+        <p class="mt-4 text-sm text-gray-600">
+            Don't have an account? <a href="{% url 'onboarding' %}" class="text-blue-500 hover:text-blue-600 font-semibold">Sign Up</a>
+        </p>
+    </div>
+</main>
+{% endblock %}

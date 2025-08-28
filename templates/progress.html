@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+<script src="{% static 'common/js/chart.js' %}"></script>
+<script src="{% static 'common/js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Progress</h1>
+        <a href="{% url 'dashboard' %}" class="text-blue-500 hover:text-blue-600 font-semibold" hx-boost="true">Back to Dashboard</a>
+    </div>
+    <div class="p-6 bg-white rounded-2xl shadow-sm space-y-8">
+        <section>
+            <h2 class="text-xl font-semibold mb-4">Weight Progress</h2>
+            <div class="bg-gray-50 p-6 rounded-xl">
+                <canvas id="weightChart"></canvas>
+                <div class="mt-4 text-center text-gray-600">
+                    <p>Current: <span class="font-bold">{{ profile.current_weight|floatformat:0 }} kg</span></p>
+                    <p>Target: <span class="font-bold">{{ profile.target_weight|floatformat:0 }} kg</span></p>
+                    {% if profile.target_date %}
+                    <p>Days left: <span class="font-bold">{{ profile.target_date|timesince:date_now|date:"j" }} days</span></p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-4">Daily Calorie History</h2>
+            <div class="bg-gray-50 p-6 rounded-xl">
+                <canvas id="calorieChart"></canvas>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    const calorieData = {{ calorie_data_json|safe }}
+    const calorieDates = calorieData.dates;
+    const calories = calorieData.calories;
+
+    const ctx = document.getElementById('calorieChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: calorieDates,
+            datasets: [{
+                label: 'Calories Consumed',
+                data: calories,
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: '#3b82f6',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false,
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                    },
+                },
+            },
+        },
+    });
+</script>
+{% endblock %}

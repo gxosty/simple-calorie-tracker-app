@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     target_weight = models.FloatField(null=True, blank=True)
     target_date = models.DateField(null=True, blank=True)
     daily_calorie_goal = models.IntegerField(
-        default=2000
+        null=True, blank=True,
     )  # Simple fallback if user doesn't set
     goal_type = models.CharField(
         max_length=10, choices=GOAL_CHOICES, default="maintain"

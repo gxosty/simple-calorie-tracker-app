@@ -1,0 +1,29 @@
+<div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm meal-item">
+    <div class="flex-grow">
+        <div class="font-bold inline-block">{{ entry.name }}</div>
+        <div class="text-sm text-gray-500 inline-block">{{ entry.grams }}g</div>
+        {% with time_ago=entry.timestamp|timesince %}
+            {% if time_ago == "0 minutes" %}
+                <div class="text-sm text-gray-500 mt-1">Just now</div>
+            {% else %}
+                <div class="text-sm text-gray-500 mt-1">{{ entry.timestamp|date:"g:i A" }}</div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="text-right flex-shrink-0 ml-4">
+        {% if entry.calories %}
+            <div class="font-semibold">{{ entry.calories|floatformat:0 }} cal</div>
+        {% else %}
+            <div class="font-semibold text-gray-400">Estimating...</div>
+        {% endif %}
+    </div>
+    <div class="ml-4">
+        <button 
+            hx-post="{% url 'delete_food' entry.id %}"
+            hx-swap="none"
+            class="text-red-500 hover:text-red-700"
+        >
+            ❌
+        </button>
+    </div>
+</div>

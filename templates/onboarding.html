@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
+        {% include "partials/stepper.html" with current_step=step %}
+        
+        <form method="post" hx-boost="true">
+            {% csrf_token %}
+            {% if step == 1 %}
+                <h1 class="text-3xl font-bold mb-6">What's Your Goal?</h1>
+                <div class="space-y-4">
+                    {% for choice in goal_choices %}
+                    <label class="block">
+                        <input type="radio" name="goal_type" value="{{ choice.0 }}" required class="form-radio text-blue-600">
+                        <span class="ml-2 text-gray-700">{{ choice.1 }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next</button>
+            {% elif step == 2 %}
+                <h1 class="text-3xl font-bold mb-6">Tell Us About Yourself</h1>
+                <input type="number" name="current_weight" placeholder="Current Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 mb-3" required>
+                <input type="number" name="target_weight" placeholder="Target Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 mb-3" required>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">Next</button>
+            {% elif step == 3 %}
+                <h1 class="text-3xl font-bold mb-6">Create Account</h1>
+                <div class="space-y-4">
+                    <div>
+                        <label for="{{ form.username.id_for_label }}" class="block text-left text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" placeholder="Enter your username" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                        {% for error in form.username.errors %}
+                        <p class="text-red-500 text-xs mt-1 text-left">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <label for="{{ form.password1.id_for_label }}" class="block text-left text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="{{ form.password1.id_for_label }}" name="{{ form.password1.name }}" placeholder="Create a password" value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                        {% for error in form.password.errors %}
+                        <p class="text-red-500 text-xs mt-1 text-left">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <label for="{{ form.password2.id_for_label }}" class="block text-left text-sm font-medium text-gray-700">Confirm Password</label>
+                        <input type="password" id="{{ form.password2.id_for_label }}" name="{{ form.password2.name }}" placeholder="Confirm your password" value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                        {% for error in form.password2.errors %}
+                        <p class="text-red-500 text-xs mt-1 text-left">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="text-red-500 text-xs mt-4 text-left">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Finish</button>
+            {% endif %}
+        </form>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Tracker</title>
+    <link rel="stylesheet" href="{% static 'common/css/openmoji.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'common/css/custom.css' %}"></link>
+    <script src="{% static 'common/js/tailwind.min.js' %}"></script>
+    <script src="{% static 'common/js/htmx.min.js' %}"></script>
+</head>
+<body class="bg-gray-50 font-sans antialiased text-gray-900">
+    {% block header %}{% endblock %}
+    <div class="container mx-auto px-4 py-8 max-w-lg">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

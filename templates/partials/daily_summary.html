@@ -1,0 +1,44 @@
+{% load mathfilters %}
+
+
+<div hx-get="{% url 'get_daily_summary' %}" hx-swap="outerHTML" hx-trigger="meal-list-updated from:body">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Today</h2>
+        <p class="text-sm text-gray-500">{{ now|date:"F j, Y" }}</p>
+    </div>
+
+    <div class="flex items-center justify-between">
+        <div class="relative w-24 h-24">
+            <div class="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+
+            <div class="absolute inset-0 rounded-full" 
+                 style="background: conic-gradient(
+                    {% if calories_consumed_today > profile.daily_calorie_goal %}
+                        var(--color-red-500) 0% 100%,
+                    {% else %}
+                        var(--color-blue-500) 0% calc({{ calories_consumed_today }} / {{ profile.daily_calorie_goal }} * 100%),
+                    {% endif %}
+                    transparent 0
+                 );"
+            ></div>
+
+            <div class="absolute inset-2 bg-white rounded-full flex flex-col justify-center items-center">
+                <span class="text-2xl font-bold">{{ calories_consumed_today|floatformat:0 }}</span>
+                <span class="text-xs text-gray-500">cal</span>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm">Consumed: <span class="font-bold">{{ calories_consumed_today|floatformat:0 }}</span></p>
+            <p class="text-sm">Goal: <span class="font-bold">{{ profile.daily_calorie_goal|floatformat:0 }}</span></p>
+            <p class="text-sm">Remaining: <span class="font-bold {% if calories_consumed_today > profile.daily_calorie_goal %}text-red-500{% else %}text-blue-500{% endif %}">{{ profile.daily_calorie_goal|sub:calories_consumed_today|floatformat:0 }}</span></p>
+        </div>
+    </div>
+
+    <p class="text-center mt-4 text-gray-600">
+        {% if calories_consumed_today > profile.daily_calorie_goal %}
+            Slow down, you're ahead of goal! 😅
+        {% else %}
+            You're on track! 💪
+        {% endif %}
+    </p>
+</div>
