@@ -103,9 +103,10 @@ def onboarding(request):
 @login_required
 def dashboard(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    now = timezone.datetime.now()
 
     today_entries = FoodEntry.objects.filter(
-        user=request.user, timestamp__date=timezone.datetime.now().date()
+        user=request.user, timestamp__date=now.date()
     ).order_by("-timestamp")
 
     calories_consumed_today = sum(
@@ -113,6 +114,7 @@ def dashboard(request):
     )
 
     context = {
+        "now": now,
         "profile": user_profile,
         "today_entries": today_entries,
         "calories_consumed_today": calories_consumed_today,
@@ -193,9 +195,10 @@ def get_meal_list(request):
 @login_required
 def get_daily_summary(request):
     user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    now = timezone.datetime.now()
 
     today_entries = FoodEntry.objects.filter(
-        user=request.user, timestamp__date=timezone.datetime.now().date()
+        user=request.user, timestamp__date=now.date()
     ).order_by("-timestamp")
 
     calories_consumed_today = sum(
@@ -203,6 +206,7 @@ def get_daily_summary(request):
     )
 
     context = {
+        "now": now,
         "profile": user_profile,
         "today_entries": today_entries,
         "calories_consumed_today": calories_consumed_today,

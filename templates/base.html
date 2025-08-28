@@ -10,8 +10,12 @@
     <link rel="stylesheet" href="{% static 'common/css/custom.css' %}"></link>
     <script src="{% static 'common/js/tailwind.min.js' %}"></script>
     <script src="{% static 'common/js/htmx.min.js' %}"></script>
+    <script src="{% static 'common/js/idiomorph.min.js' %}"></script>
+    <script src="{% static 'common/js/idiomorph-ext.min.js' %}"></script>
+    <script src="{% static 'common/js/chart.js' %}"></script>
+    <script src="{% static 'common/js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
 </head>
-<body class="bg-gray-50 font-sans antialiased text-gray-900">
+<body class="bg-gray-50 font-sans antialiased text-gray-900" hx-ext="morph">
     {% block header %}{% endblock %}
     <div class="container mx-auto px-4 py-8 max-w-lg">
         {% block content %}{% endblock %}

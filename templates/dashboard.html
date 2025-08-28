@@ -6,15 +6,9 @@
         <h1 class="text-2xl font-bold">Dashboard</h1>
         <div>
             <a href="{% url 'progress' %}" class="text-blue-500 hover:text-blue-600 font-semibold" hx-boost="true">Progress</a>
-            <a href="{% url 'logout' %}" class="text-red-500 hover:text-red-600 font-semibold ms-3">Log Out</a>
+            <a href="{% url 'logout' %}" class="text-red-500 hover:text-red-600 font-semibold ms-3" hx-boost="true">Log Out</a>
         </div>
     </div>
-    {% if profile.current_weight == None %}
-    <section class="bg-blue-100 p-6 rounded-2xl shadow-sm mb-6">
-        <h1 class="text-2xl font-bold mb-2">Welcome! <i>👋</i></h1>
-        <p>Looks like you're new here. Let's set up your goal. You can find the onboarding form here.</p>
-    </section>
-    {% endif %}
 
     <section class="bg-white p-6 rounded-2xl shadow-sm mb-6">
         {% include 'partials/daily_summary.html' with calories_consumed_today=calories_consumed_today profile=profile %}
@@ -29,7 +23,7 @@
             <input type="number" name="calories" placeholder="Optional: Calories" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mb-4">
             <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">
                 Add Food
-                <span id="add-food-spinner" class="htmx-indicator ml-2">⏳</span>
+                <span id="add-food-spinner" class="htmx-indicator ml-2"><i>⏳</i></span>
             </button>
         </form>
     </section>

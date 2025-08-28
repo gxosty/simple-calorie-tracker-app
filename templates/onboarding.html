@@ -5,7 +5,7 @@
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
         {% include "partials/stepper.html" with current_step=step %}
         
-        <form method="post" hx-boost="true">
+        <form method="post" hx-boost="true" hx-indicator="#request-indicator" hx-sync="this:drop">
             {% csrf_token %}
             {% if step == 1 %}
                 <h1 class="text-3xl font-bold mb-6">What's Your Goal?</h1>
@@ -17,12 +17,12 @@
                     </label>
                     {% endfor %}
                 </div>
-                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next</button>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next<span id="request-indicator" class="htmx-indicator icon"> ⏳</span></button>
             {% elif step == 2 %}
                 <h1 class="text-3xl font-bold mb-6">Tell Us About Yourself</h1>
-                <input type="number" name="current_weight" placeholder="Current Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 mb-3" required>
-                <input type="number" name="target_weight" placeholder="Target Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 mb-3" required>
-                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">Next</button>
+                <input type="number" name="current_weight" placeholder="Current Weight (kg)" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6" required>
+                <input type="number" name="target_weight" placeholder="Target Weight (kg)" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6" required>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next<span id="request-indicator" class="htmx-indicator icon"> ⏳</span></button>
             {% elif step == 3 %}
                 <h1 class="text-3xl font-bold mb-6">Create Account</h1>
                 <div class="space-y-4">
@@ -55,7 +55,7 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Finish</button>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Finish<span id="request-indicator" class="htmx-indicator icon"> ⏳</span></button>
             {% endif %}
         </form>
     </div>

@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block header %}
-<script src="{% static 'common/js/chart.js' %}"></script>
-<script src="{% static 'common/js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
-{% endblock %}
-
 {% block content %}
 <main>
     <div class="flex justify-between items-center mb-6">
@@ -37,47 +32,49 @@
 </main>
 
 <script>
-    const calorieData = {{ calorie_data_json|safe }}
-    const calorieDates = calorieData.dates;
-    const calories = calorieData.calories;
+    (function() {
+        let calorieData = {{ calorie_data_json|safe }}
+        let calorieDates = calorieData.dates;
+        let calories = calorieData.calories;
 
-    const ctx = document.getElementById('calorieChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: calorieDates,
-            datasets: [{
-                label: 'Calories Consumed',
-                data: calories,
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                borderColor: '#3b82f6',
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false,
-                },
-                title: {
-                    display: false,
-                },
+        const ctx = document.getElementById('calorieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: calorieDates,
+                datasets: [{
+                    label: 'Calories Consumed',
+                    data: calories,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: false,
+                    },
                 },
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day',
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                        },
                     },
                 },
             },
-        },
-    });
+        });
+    })();
 </script>
 {% endblock %}

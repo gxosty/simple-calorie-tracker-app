@@ -1,7 +1,7 @@
 {% load mathfilters %}
 
 
-<div hx-get="{% url 'get_daily_summary' %}" hx-swap="outerHTML" hx-trigger="meal-list-updated from:body">
+<div class="fade-in-out" hx-get="{% url 'get_daily_summary' %}" hx-swap="morph:outerHTML swap:0.25s" hx-trigger="meal-list-updated from:body">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">Today</h2>
         <p class="text-sm text-gray-500">{{ now|date:"F j, Y" }}</p>
@@ -11,15 +11,16 @@
         <div class="relative w-24 h-24">
             <div class="absolute inset-0 rounded-full border-4 border-gray-200"></div>
 
-            <div class="absolute inset-0 rounded-full" 
+            <div id="circular_goal_progress" class="absolute inset-0 rounded-full" 
                  style="background: conic-gradient(
                     {% if calories_consumed_today > profile.daily_calorie_goal %}
                         var(--color-red-500) 0% 100%,
                     {% else %}
-                        var(--color-blue-500) 0% calc({{ calories_consumed_today }} / {{ profile.daily_calorie_goal }} * 100%),
+                        var(--color-blue-500) 0% calc({{ calories_consumed_today|floatformat:0 }} / {{ profile.daily_calorie_goal }} * 100%),
                     {% endif %}
                     transparent 0
-                 );"
+                 );
+                transition: background 1s ease-in-out;"
             ></div>
 
             <div class="absolute inset-2 bg-white rounded-full flex flex-col justify-center items-center">
@@ -36,9 +37,9 @@
 
     <p class="text-center mt-4 text-gray-600">
         {% if calories_consumed_today > profile.daily_calorie_goal %}
-            Slow down, you're ahead of goal! 😅
+            Slow down, you're ahead of goal! <span class="icon">😅</span>
         {% else %}
-            You're on track! 💪
+            You're on track! <span class="icon">💪</span>
         {% endif %}
     </p>
 </div>
