@@ -12,3 +12,4 @@ wheels/
 # User files
 .python-version
 .env
+.sqlite3
