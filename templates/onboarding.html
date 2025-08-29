@@ -20,8 +20,20 @@
                 <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next<span id="request-indicator" class="htmx-indicator icon"> ⏳</span></button>
             {% elif step == 2 %}
                 <h1 class="text-3xl font-bold mb-6">Tell Us About Yourself</h1>
-                <input type="number" name="current_weight" placeholder="Current Weight (kg)" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6" required>
-                <input type="number" name="target_weight" placeholder="Target Weight (kg)" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6" required>
+                <div class="space-y-4">
+                    <div>
+                        <label for="input-current-weight" class="block text-left text-sm font-medium text-gray-700">Current weight</label>
+                        <input id="input-current-weight" type="number" name="current_weight" placeholder="Enter Current Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                    </div>
+                    <div>
+                        <label for="input-target-weight" class="block text-left text-sm font-medium text-gray-700">Target weight</label>
+                        <input id="input-target-weight" type="number" name="target_weight" placeholder="Enter Target Weight (kg)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                    </div>
+                    <div>
+                        <label for="input-target-date" class="block text-left text-sm font-medium text-gray-700">Target date</label>
+                        <input id="input-target-date" type="date" name="target_date" class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-blue-500 transition mt-1" required>
+                    </div>
+                </div>
                 <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition mt-6">Next<span id="request-indicator" class="htmx-indicator icon"> ⏳</span></button>
             {% elif step == 3 %}
                 <h1 class="text-3xl font-bold mb-6">Create Account</h1>

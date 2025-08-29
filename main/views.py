@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.http import HttpResponse
@@ -43,9 +45,11 @@ def onboarding(request):
             # Step 2: Weight and Target
             current_weight = request.POST.get("current_weight")
             target_weight = request.POST.get("target_weight")
+            target_date = request.POST.get("target_date")
 
             request.session["onboarding_current_weight"] = float(current_weight)
             request.session["onboarding_target_weight"] = float(target_weight)
+            request.session["onboarding_target_date"] = target_date
             request.session["onboarding_step"] = 3
 
             return redirect("onboarding")
@@ -69,6 +73,10 @@ def onboarding(request):
                         profile.target_weight = request.session.get(
                             "onboarding_target_weight"
                         )
+                        profile.target_date = timezone.datetime.strptime(
+                            request.session.get("onboarding_target_date"),
+                            "%Y-%m-%d",
+                        )
                         profile.goal_type = request.session.get("onboarding_goal_type")
 
                         # Calculate and set calorie goal
@@ -86,6 +94,7 @@ def onboarding(request):
                 del request.session["onboarding_step"]
                 del request.session["onboarding_current_weight"]
                 del request.session["onboarding_target_weight"]
+                del request.session["onboarding_target_date"]
                 del request.session["onboarding_goal_type"]
                 # Onboarding complete, redirect to dashboard
                 return redirect("dashboard")
@@ -143,6 +152,11 @@ def progress(request):
     # a way for users to log their weight over time, we can show
     # a static representation with their starting weight and target
     # weight. In a real-world app, we would have a WeightLog model.
+    weight_data = {
+        "dates": [user.date_joined.isoformat(), profile.target_date.isoformat()],
+        "weights": [profile.current_weight, profile.target_weight],
+    }
+
     sorted_daily_calories = sorted(daily_calories.keys())
     calorie_data = {
         "dates": [d.isoformat() for d in sorted_daily_calories],
@@ -152,6 +166,7 @@ def progress(request):
     context = {
         "profile": profile,
         "calorie_data_json": calorie_data,
+        "weight_data_json": weight_data,
     }
 
     return render(request, "progress.html", context)
@@ -223,20 +238,29 @@ def add_food(request):
     grams = request.POST.get("grams")
     calories = request.POST.get("calories")
 
+    template = loader.get_template("partials/add_food_message.html")
+
     if not all([name, grams]):
-        return HttpResponse("Food name and grams are required.", status=400)
+        messages.error(request, "❌ Food name and grams are required.")
+        return HttpResponse(template.render({}, request))
 
     try:
         grams = float(grams)
         calories = float(calories) if calories else None
     except (ValueError, TypeError):
-        return HttpResponse("Invalid input for grams or calories.", status=400)
+        messages.error(request, "❌ Invalid input for grams or calories.")
+        return HttpResponse(template.render({}, request))
 
     FoodEntry.objects.create(
         user=request.user, name=name, grams=grams, calories=calories
     )
 
-    return HttpResponse(status=200, headers={"HX-Trigger": "meal-list-updated"})
+    messages.success(request, f'✔ Added "{name}"')
+
+    return HttpResponse(
+        template.render({}, request),
+        headers={"HX-Trigger": "meal-list-updated"},
+    )
 
 
 @login_required

@@ -8,22 +8,23 @@
         <a href="{% url 'dashboard' %}" class="text-blue-500 hover:text-blue-600 font-semibold" hx-boost="true">Back to Dashboard</a>
     </div>
     <div class="p-6 bg-white rounded-2xl shadow-sm space-y-8">
-        <section>
-            <h2 class="text-xl font-semibold mb-4">Weight Progress</h2>
+        <div class="flex justify-center space-x-4">
+            <button id="showWeightChart" class="px-6 py-2 rounded-full font-semibold transition-colors duration-200 bg-blue-500 text-white">Weight Progress</button>
+            <button id="showCalorieChart" class="px-6 py-2 rounded-full font-semibold transition-colors duration-200 bg-gray-200 text-gray-700">Daily Calories</button>
+        </div>
+        <section id="weightChartContainer" class="chart-container">
+            <h2 class="text-xl font-semibold mb-4 text-center">Weight Progress</h2>
             <div class="bg-gray-50 p-6 rounded-xl">
                 <canvas id="weightChart"></canvas>
                 <div class="mt-4 text-center text-gray-600">
                     <p>Current: <span class="font-bold">{{ profile.current_weight|floatformat:0 }} kg</span></p>
                     <p>Target: <span class="font-bold">{{ profile.target_weight|floatformat:0 }} kg</span></p>
-                    {% if profile.target_date %}
-                    <p>Days left: <span class="font-bold">{{ profile.target_date|timesince:date_now|date:"j" }} days</span></p>
-                    {% endif %}
+                    <p>Target Date: <span class="font-bold">{{ profile.target_date|date:"F j, Y" }} ({{ profile.target_date|timeuntil}} left)</span></p>
                 </div>
             </div>
         </section>
-
-        <section>
-            <h2 class="text-xl font-semibold mb-4">Daily Calorie History</h2>
+        <section id="calorieChartContainer" class="chart-container hidden">
+            <h2 class="text-xl font-semibold mb-4 text-center">Daily Calorie History</h2>
             <div class="bg-gray-50 p-6 rounded-xl">
                 <canvas id="calorieChart"></canvas>
             </div>
@@ -33,12 +34,12 @@
 
 <script>
     (function() {
-        let calorieData = {{ calorie_data_json|safe }}
+        let calorieData = {{ calorie_data_json|safe }};
         let calorieDates = calorieData.dates;
         let calories = calorieData.calories;
 
-        const ctx = document.getElementById('calorieChart').getContext('2d');
-        new Chart(ctx, {
+        const calorieCtx = document.getElementById('calorieChart').getContext('2d');
+        new Chart(calorieCtx, {
             type: 'line',
             data: {
                 labels: calorieDates,
@@ -75,6 +76,75 @@
                 },
             },
         });
+
+        let weightData = {{ weight_data_json|safe }};
+        let weightDates = weightData.dates;
+        let weights = weightData.weights;
+        const weightCtx = document.getElementById("weightChart");
+        new Chart(weightCtx, {
+            type: 'line',
+            data: {
+                labels: weightDates,
+                datasets: [{
+                    label: 'Weight (kg)',
+                    data: weights,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: false,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        center: true,
+                    },
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                        },
+                    },
+                },
+            },
+        });
+
+        const weightChartContainer = document.getElementById('weightChartContainer');
+        const calorieChartContainer = document.getElementById('calorieChartContainer');
+        const showWeightBtn = document.getElementById('showWeightChart');
+        const showCalorieBtn = document.getElementById('showCalorieChart');
+
+        function toggleCharts(showWeight) {
+            if (showWeight) {
+                weightChartContainer.classList.remove('hidden');
+                calorieChartContainer.classList.add('hidden');
+                showWeightBtn.classList.add('bg-blue-500', 'text-white');
+                showWeightBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                showCalorieBtn.classList.remove('bg-blue-500', 'text-white');
+                showCalorieBtn.classList.add('bg-gray-200', 'text-gray-700');
+            } else {
+                weightChartContainer.classList.add('hidden');
+                calorieChartContainer.classList.remove('hidden');
+                showWeightBtn.classList.remove('bg-blue-500', 'text-white');
+                showWeightBtn.classList.add('bg-gray-200', 'text-gray-700');
+                showCalorieBtn.classList.add('bg-blue-500', 'text-white');
+                showCalorieBtn.classList.remove('bg-gray-200', 'text-gray-700');
+            }
+        }
+
+        showWeightBtn.addEventListener('click', () => toggleCharts(true));
+        showCalorieBtn.addEventListener('click', () => toggleCharts(false));
     })();
 </script>
 {% endblock %}
