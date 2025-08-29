@@ -12,5 +12,6 @@ urlpatterns = [
     path("delete_food/<int:food_id>/", views.delete_food, name="delete_food"),
     path("login/", views.login_user, name="login"),
     path("logout/", views.logout_user, name="logout"),
+    path("health-check", views.health_check),
     # path("register/", views.register_user, name="register"),
 ]

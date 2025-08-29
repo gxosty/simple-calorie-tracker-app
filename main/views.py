@@ -271,3 +271,7 @@ def delete_food(request, food_id):
         food_entry.delete()
         return HttpResponse(status=200, headers={"HX-Trigger": "meal-list-updated"})
     return HttpResponse(status=405)  # Method Not Allowed
+
+
+def health_check(request):
+    return HttpResponse(status=200)
